@@ -1,0 +1,442 @@
+/* ========== 全局容器 ========== */
+.factor-mining-container {
+  min-height: 100vh;
+  position: relative;
+  padding: 16px;
+  background: transparent;
+}
+
+/* ========== 背景效果 ========== */
+.factor-mining-container .bg-gradient {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.factor-mining-container .bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ========== 主内容区域 ========== */
+.factor-mining-container .factor-mining-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* ========== 页面头部 ========== */
+.factor-mining-container .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.06);
+}
+
+.factor-mining-container .header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.factor-mining-container .header-icon {
+  font-size: 36px;
+  color: #3b82f6;
+}
+
+.factor-mining-container .page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.factor-mining-container .page-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ========== 卡片样式 ========== */
+.factor-mining-container .config-card,
+.factor-mining-container .result-card {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(59, 130, 246, 0.12) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.06);
+}
+
+.factor-mining-container .config-card .ant-card-head-title,
+.factor-mining-container .result-card .ant-card-head-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+/* ========== 提示文本 ========== */
+.factor-mining-container .text-hint {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+/* ========== 因子选择下拉样式 ========== */
+
+/* Select 组件本身样式 - 与其他输入框统一 */
+.factor-mining-container .ant-select .ant-select-selector {
+  border-radius: 6px !important;
+  border: 1px solid #d9d9d9 !important;
+  box-shadow: none !important;
+  transition: all 0.2s !important;
+  height: 38px !important;
+}
+
+.factor-mining-container .ant-select:hover .ant-select-selector {
+  border-color: #4096ff !important;
+}
+
+.factor-mining-container .ant-select-focused .ant-select-selector {
+  border-color: #4096ff !important;
+  box-shadow: 0 0 0 2px rgba(64, 150, 255, 0.1) !important;
+}
+
+.factor-mining-container .ant-select-lg .ant-select-selector {
+  height: 40px !important;
+  font-size: 16px;
+  padding: 4px 11px;
+}
+
+/* 选择器内部文本 */
+.factor-mining-container .ant-select-lg .ant-select-selection-search-input {
+  height: 30px;
+  line-height: 30px;
+}
+
+/* 选择器placeholder */
+.factor-mining-container .ant-select-lg .ant-select-selection-placeholder {
+  line-height: 38px;
+}
+
+/* 多选标签 */
+.factor-mining-container .ant-select-lg .ant-select-selection-item {
+  height: 24px;
+  line-height: 22px;
+  margin-top: 5px;
+}
+
+/* 下拉面板样式 */
+.factor-mining-container .factor-select-dropdown {
+  font-size: 14px;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+}
+
+.factor-mining-container .factor-select-dropdown .ant-select-item {
+  padding: 8px 12px;
+  min-height: auto;
+  line-height: 1.5;
+}
+
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-content {
+  font-size: 14px;
+}
+
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-selected {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-active {
+  background-color: rgba(59, 130, 246, 0.12);
+}
+
+/* 下拉选项内部元素样式 */
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-content > div {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-content > div > div {
+  font-size: 14px;
+}
+
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-content > div > div > span {
+  font-size: 14px;
+}
+
+/* 标签样式调整 */
+.factor-mining-container .factor-select-dropdown .ant-tag {
+  font-size: 12px;
+  line-height: 1.2;
+  padding-inline: 4px 8px;
+  margin: 0;
+}
+
+/* 代码部分样式 */
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-content > div > div:nth-child(2) {
+  font-size: 13px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* 描述部分样式 */
+.factor-mining-container .factor-select-dropdown .ant-select-item-option-content > div > div:nth-child(3) {
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* 多选标签样式统一 */
+.factor-mining-container .ant-select-selection-item {
+  border-radius: 4px;
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* ========== 占位符 ========== */
+.factor-mining-container .placeholder-content {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.factor-mining-container .placeholder-icon {
+  font-size: 64px;
+  color: #cbd5e1;
+  margin-bottom: 16px;
+}
+
+.factor-mining-container .placeholder-text {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0 0 8px 0;
+}
+
+.factor-mining-container .placeholder-hint {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ========== 挖掘进度 ========== */
+.factor-mining-container .mining-progress {
+  padding: 16px 0;
+}
+
+.factor-mining-container .progress-section {
+  margin-bottom: 24px;
+}
+
+.factor-mining-container .progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.factor-mining-container .progress-label {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.factor-mining-container .progress-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.factor-mining-container .stat-item {
+  text-align: center;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.factor-mining-container .stat-label {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 8px 0;
+}
+
+.factor-mining-container .stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.factor-mining-container .stat-value.stat-primary {
+  color: #3b82f6;
+}
+
+.factor-mining-container .chart-section {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.factor-mining-container .chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+}
+
+/* ========== 挖掘结果 ========== */
+.factor-mining-container .result-summary {
+  padding: 16px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+}
+
+.factor-mining-container .mining-result {
+  padding: 16px 0;
+}
+
+.factor-mining-container .result-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+}
+
+.factor-mining-container .factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.factor-mining-container .factor-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  transition: all 0.2s;
+}
+
+.factor-mining-container .factor-card:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.factor-mining-container .factor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.factor-mining-container .factor-info {
+  flex: 1;
+}
+
+.factor-mining-container .factor-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.factor-mining-container .factor-expression {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+  word-break: break-all;
+}
+
+.factor-mining-container .factor-stats {
+  text-align: right;
+  margin-left: 16px;
+}
+
+.factor-mining-container .factor-stats .stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.factor-mining-container .factor-stats .stat-row:last-child {
+  margin-bottom: 0;
+}
+
+.factor-mining-container .factor-stats .stat-label {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.factor-mining-container .factor-stats .stat-value {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.factor-mining-container .factor-stats .stat-value.positive {
+  color: #22c55e;
+}
+
+.factor-mining-container .factor-stats .stat-value.negative {
+  color: #ef4444;
+}
+
+.factor-mining-container .factor-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ========== 结果操作按钮 ========== */
+.factor-mining-container .result-actions {
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .factor-mining-container {
+    padding: 16px;
+  }
+
+  .factor-mining-container .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .factor-mining-container .factor-header {
+    flex-direction: column;
+  }
+
+  .factor-mining-container .factor-stats {
+    text-align: left;
+    margin-left: 0;
+    margin-top: 12px;
+  }
+
+  .factor-mining-container .factor-stats .stat-row {
+    justify-content: flex-start;
+  }
+}

@@ -1,0 +1,477 @@
+/* ========== 全局变量 ========== */
+.home-container {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  padding: 0;
+  background: transparent;
+}
+
+/* ========== 背景效果 ========== */
+.bg-gradient {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(59, 130, 246, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(6, 182, 212, 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(99, 102, 241, 0.05) 0%,
+      transparent 40%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  animation: float 25s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: rgba(59, 130, 246, 0.15);
+  top: -200px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: rgba(6, 182, 212, 0.12);
+  bottom: -150px;
+  left: -100px;
+  animation-delay: -8s;
+}
+
+.orb-3 {
+  width: 350px;
+  height: 350px;
+  background: rgba(99, 102, 241, 0.1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: -15s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+
+/* ========== 欢迎横幅 ========== */
+.welcome-banner {
+  position: relative;
+  z-index: 10;
+  padding: 60px 40px;
+  margin-bottom: 40px;
+}
+
+.banner-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.banner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 30px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.banner-title {
+  font-size: 56px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.title-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.banner-subtitle {
+  font-size: 20px;
+  color: #475569;
+  margin-bottom: 32px;
+}
+
+/* ========== 统计卡片 ========== */
+.stats-section {
+  position: relative;
+  z-index: 10;
+  padding: 0 40px 40px;
+}
+
+.quick-start-card {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.05),
+    rgba(6, 182, 212, 0.05)
+  ) !important;
+  border: 1px solid rgba(59, 130, 246, 0.2) !important;
+  border-radius: 24px !important;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.12);
+  overflow: hidden;
+}
+
+.quick-start-content {
+  padding: 20px;
+}
+
+.quick-start-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.15),
+    rgba(6, 182, 212, 0.15)
+  );
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 30px;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.quick-start-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+}
+
+.quick-start-desc {
+  font-size: 16px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+  max-width: 500px;
+}
+
+.quick-start-stats {
+  padding: 20px;
+  margin-top: 40px;
+}
+
+.button-row {
+  margin-top: 24px;
+}
+
+.health-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 20px;
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 10px;
+}
+
+.health-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.health-label {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.health-status-text {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.health-time {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.mini-stat {
+  text-align: center;
+  padding: 20px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.mini-stat:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(59, 130, 246, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.mini-stat .anticon {
+  font-size: 28px;
+  color: #3b82f6;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.mini-stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.mini-stat-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* ========== 功能模块 ========== */
+.modules-section {
+  position: relative;
+  z-index: 10;
+  padding: 0 40px 40px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+  text-align: center;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
+}
+
+.module-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(59, 130, 246, 0.15) !important;
+  border-radius: 20px !important;
+  padding: 28px !important;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+}
+
+.module-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.module-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  opacity: 0.8;
+}
+
+.module-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(59, 130, 246, 0.25) !important;
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+}
+
+.module-card:hover .module-bg {
+  opacity: 1;
+}
+
+.module-icon-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.module-card:hover .module-icon-wrapper {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.module-icon {
+  font-size: 28px;
+  color: inherit;
+}
+
+.module-content {
+  position: relative;
+  z-index: 1;
+}
+
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.module-number {
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.2),
+    rgba(59, 130, 246, 0.05)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.module-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px 0;
+}
+
+.module-desc {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  min-height: 48px;
+}
+
+.module-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.module-tag {
+  padding: 4px 12px;
+  background: rgba(59, 130, 246, 0.06);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .welcome-banner {
+    padding: 40px 20px;
+  }
+
+  .banner-title {
+    font-size: 36px;
+  }
+
+  .banner-subtitle {
+    font-size: 16px;
+  }
+
+  .stats-section,
+  .modules-section {
+    padding: 0 20px 20px;
+  }
+
+  .module-title {
+    font-size: 20px;
+  }
+
+  .module-footer {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .quick-start-title {
+    font-size: 24px;
+  }
+
+  .quick-start-desc {
+    font-size: 14px;
+  }
+
+  .health-status {
+    width: 100%;
+    justify-content: center;
+  }
+}

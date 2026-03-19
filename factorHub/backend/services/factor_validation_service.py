@@ -1,0 +1,428 @@
+"""
+因子验证服务 - 验证因子质量
+"""
+from typing import Dict, Optional, List
+import pandas as pd
+import numpy as np
+from scipy import stats
+from sklearn.metrics import pairwise_distances
+
+
+class FactorValidationService:
+    """因子验证服务"""
+
+    def __init__(
+        self,
+        ic_threshold: float = 0.03,
+        ir_threshold: float = 0.5,
+        turnover_threshold: float = 0.5,
+        max_correlation: float = 0.8,
+    ):
+        """
+        初始化因子验证服务
+
+        Args:
+            ic_threshold: IC阈值（绝对值）
+            ir_threshold: IR阈值
+            turnover_threshold: 换手率阈值
+            max_correlation: 最大相关性阈值
+        """
+        self.ic_threshold = ic_threshold
+        self.ir_threshold = ir_threshold
+        self.turnover_threshold = turnover_threshold
+        self.max_correlation = max_correlation
+
+    def validate_factor(
+        self,
+        factor_values: pd.Series,
+        return_values: pd.Series,
+        existing_factors: Optional[Dict[str, pd.Series]] = None,
+    ) -> Dict:
+        """
+        全面验证因子质量
+
+        Args:
+            factor_values: 因子值序列
+            return_values: 收益率序列
+            existing_factors: 已有因子字典（用于相关性检测）
+
+        Returns:
+            验证结果
+        """
+        results = {
+            "ic_validation": None,
+            "ir_validation": None,
+            "turnover_validation": None,
+            "stability_validation": None,
+            "correlation_validation": None,
+            "overall_passed": False,
+            "score": 0.0,
+        }
+
+        # 1. IC验证
+        results["ic_validation"] = self._validate_ic(factor_values, return_values)
+
+        # 2. IR验证
+        results["ir_validation"] = self._validate_ir(factor_values, return_values)
+
+        # 3. 换手率验证
+        results["turnover_validation"] = self._validate_turnover(factor_values)
+
+        # 4. 稳定性验证
+        results["stability_validation"] = self._validate_stability(factor_values)
+
+        # 5. 相关性验证
+        if existing_factors:
+            results["correlation_validation"] = self._validate_correlation(
+                factor_values, existing_factors
+            )
+        else:
+            results["correlation_validation"] = {"passed": True, "max_correlation": 0.0}
+
+        # 综合判断
+        results["overall_passed"] = all([
+            results["ic_validation"]["passed"],
+            results["ir_validation"]["passed"],
+            results["turnover_validation"]["passed"],
+            results["stability_validation"]["passed"],
+            results["correlation_validation"]["passed"],
+        ])
+
+        # 计算综合得分（0-100）
+        results["score"] = self._calculate_score(results)
+
+        return results
+
+    def _validate_ic(
+        self,
+        factor_values: pd.Series,
+        return_values: pd.Series
+    ) -> Dict:
+        """
+        验证IC
+
+        Args:
+            factor_values: 因子值
+            return_values: 收益率
+
+        Returns:
+            IC验证结果
+        """
+        # 对齐数据
+        aligned_data = pd.DataFrame({
+            "factor": factor_values,
+            "return": return_values
+        }).dropna()
+
+        if len(aligned_data) < 10:
+            return {
+                "passed": False,
+                "ic": 0.0,
+                "message": "数据量不足",
+            }
+
+        # 计算IC
+        ic = aligned_data["factor"].corr(aligned_data["return"])
+
+        # 判断是否通过
+        passed = abs(ic) >= self.ic_threshold
+
+        return {
+            "passed": passed,
+            "ic": float(ic),
+            "threshold": self.ic_threshold,
+            "message": f"IC={ic:.4f} {'通过' if passed else '未通过'} (阈值±{self.ic_threshold})",
+        }
+
+    def _validate_ir(
+        self,
+        factor_values: pd.Series,
+        return_values: pd.Series
+    ) -> Dict:
+        """
+        验证IR
+
+        Args:
+            factor_values: 因子值
+            return_values: 收益率
+
+        Returns:
+            IR验证结果
+        """
+        # 对齐数据
+        aligned_data = pd.DataFrame({
+            "factor": factor_values,
+            "return": return_values
+        }).dropna()
+
+        if len(aligned_data) < 20:
+            return {
+                "passed": False,
+                "ir": 0.0,
+                "message": "数据量不足",
+            }
+
+        # 计算滚动IC - 使用正确的两变量滚动相关系数计算方法
+        window = 20
+        min_periods = 10
+
+        # 方法：在滚动窗口内计算两个序列的相关系数
+        rolling_ic_values = []
+
+        for i in range(len(aligned_data)):
+            # 确保有足够的历史数据
+            start_idx = max(0, i - window + 1)
+            end_idx = i + 1
+
+            window_factor = aligned_data["factor"].iloc[start_idx:end_idx]
+            window_return = aligned_data["return"].iloc[start_idx:end_idx]
+
+            # 检查有效数据点数量
+            valid_data = pd.DataFrame({
+                "factor": window_factor,
+                "return": window_return
+            }).dropna()
+
+            if len(valid_data) >= min_periods:
+                ic = valid_data["factor"].corr(valid_data["return"])
+                if not pd.isna(ic):
+                    rolling_ic_values.append(ic)
+            else:
+                rolling_ic_values.append(np.nan)
+
+        rolling_ic = pd.Series(rolling_ic_values, index=aligned_data.index)
+
+        # 计算IR（IC均值 / IC标准差）
+        ic_mean = rolling_ic.mean()
+        ic_std = rolling_ic.std()
+
+        if ic_std > 0:
+            ir = ic_mean / ic_std
+        else:
+            ir = 0.0
+
+        # 判断是否通过
+        passed = ir >= self.ir_threshold
+
+        return {
+            "passed": passed,
+            "ir": float(ir),
+            "ic_mean": float(ic_mean),
+            "ic_std": float(ic_std),
+            "threshold": self.ir_threshold,
+            "message": f"IR={ir:.4f} {'通过' if passed else '未通过'} (阈值{self.ir_threshold})",
+        }
+
+    def _validate_turnover(
+        self,
+        factor_values: pd.Series
+    ) -> Dict:
+        """
+        验证换手率
+
+        Args:
+            factor_values: 因子值
+
+        Returns:
+            换手率验证结果
+        """
+        # 计算因子排名变化
+        factor_rank = factor_values.rolling(
+            window=252, min_periods=1
+        ).rank(pct=True)
+
+        # 计算换手率（排名变化的比例）
+        rank_change = factor_rank.diff().abs()
+        turnover = rank_change.mean()
+
+        # 判断是否通过
+        passed = turnover <= self.turnover_threshold
+
+        return {
+            "passed": passed,
+            "turnover": float(turnover),
+            "threshold": self.turnover_threshold,
+            "message": f"换手率={turnover:.4f} {'通过' if passed else '未通过'} (阈值{self.turnover_threshold})",
+        }
+
+    def _validate_stability(
+        self,
+        factor_values: pd.Series
+    ) -> Dict:
+        """
+        验证因子稳定性（分布稳定性）
+
+        Args:
+            factor_values: 因子值
+
+        Returns:
+            稳定性验证结果
+        """
+        if len(factor_values) < 252:
+            return {
+                "passed": True,
+                "stability_score": 1.0,
+                "message": "数据量不足，跳过稳定性检验",
+            }
+
+        # 分段检验（每252天一段）
+        n_segments = len(factor_values) // 252
+        if n_segments < 2:
+            return {
+                "passed": True,
+                "stability_score": 1.0,
+                "message": "数据长度不足2段，跳过稳定性检验",
+            }
+
+        segments = []
+        for i in range(n_segments):
+            start_idx = i * 252
+            end_idx = start_idx + 252
+            segment = factor_values.iloc[start_idx:end_idx].dropna()
+            if len(segment) > 0:
+                segments.append(segment)
+
+        # 两两KS检验
+        p_values = []
+        for i in range(len(segments) - 1):
+            for j in range(i + 1, len(segments)):
+                statistic, p_value = stats.ks_2samp(segments[i], segments[j])
+                p_values.append(p_value)
+
+        # 稳定性得分（p值 > 0.05的比例）
+        if p_values:
+            stable_ratio = sum(1 for p in p_values if p > 0.05) / len(p_values)
+            passed = stable_ratio >= 0.6  # 60%的比较显示稳定
+        else:
+            stable_ratio = 1.0
+            passed = True
+
+        return {
+            "passed": passed,
+            "stability_score": float(stable_ratio),
+            "n_comparisons": len(p_values),
+            "message": f"稳定性得分={stable_ratio:.2f} {'通过' if passed else '未通过'}",
+        }
+
+    def _validate_correlation(
+        self,
+        factor_values: pd.Series,
+        existing_factors: Dict[str, pd.Series]
+    ) -> Dict:
+        """
+        验证因子相关性
+
+        Args:
+            factor_values: 新因子值
+            existing_factors: 已有因子字典
+
+        Returns:
+            相关性验证结果
+        """
+        correlations = []
+
+        for factor_name, factor_data in existing_factors.items():
+            # 对齐索引
+            aligned_data = pd.DataFrame({
+                "new_factor": factor_values,
+                "existing_factor": factor_data
+            }).dropna()
+
+            if len(aligned_data) >= 10:
+                corr = aligned_data["new_factor"].corr(
+                    aligned_data["existing_factor"]
+                )
+                correlations.append(corr)
+
+        if not correlations:
+            return {
+                "passed": True,
+                "max_correlation": 0.0,
+                "message": "无现有因子可对比",
+            }
+
+        max_corr = max(abs(c) for c in correlations)
+        passed = max_corr <= self.max_correlation
+
+        return {
+            "passed": passed,
+            "max_correlation": float(max_corr),
+            "all_correlations": [float(c) for c in correlations],
+            "message": f"最大相关性={max_corr:.4f} {'通过' if passed else '未通过'} (阈值{self.max_correlation})",
+        }
+
+    def _calculate_score(self, validation_results: Dict) -> float:
+        """
+        计算综合得分（0-100）
+
+        Args:
+            validation_results: 验证结果
+
+        Returns:
+            综合得分
+        """
+        score = 0.0
+
+        # IC得分（0-30分）
+        ic_result = validation_results["ic_validation"]
+        if ic_result["passed"]:
+            ic_abs = abs(ic_result["ic"])
+            score += min(ic_abs * 300, 30)  # IC=0.1时得30分
+
+        # IR得分（0-30分）
+        ir_result = validation_results["ir_validation"]
+        if ir_result["passed"]:
+            ir = ir_result["ir"]
+            score += min(ir * 20, 30)  # IR=1.5时得30分
+
+        # 稳定性得分（0-20分）
+        stab_result = validation_results["stability_validation"]
+        if stab_result["passed"]:
+            stability_score = stab_result["stability_score"]
+            score += stability_score * 20
+
+        # 换手率得分（0-20分）
+        turnover_result = validation_results["turnover_validation"]
+        if turnover_result["passed"]:
+            # 换手率越低越好
+            turnover = turnover_result["turnover"]
+            score += max(20 - turnover * 40, 0)
+
+        return round(score, 2)
+
+    def batch_validate(
+        self,
+        factors: Dict[str, pd.Series],
+        return_values: pd.Series,
+    ) -> Dict[str, Dict]:
+        """
+        批量验证多个因子
+
+        Args:
+            factors: 因子字典 {factor_name: factor_values}
+            return_values: 收益率序列
+
+        Returns:
+            验证结果字典
+        """
+        results = {}
+
+        # 按顺序验证，每次将已通过的因子加入existing_factors
+        existing_factors = {}
+
+        for factor_name, factor_values in factors.items():
+            results[factor_name] = self.validate_factor(
+                factor_values=factor_values,
+                return_values=return_values,
+                existing_factors=existing_factors,
+            )
+
+            # 如果通过验证，加入已有因子列表
+            if results[factor_name]["overall_passed"]:
+                existing_factors[factor_name] = factor_values
+
+        return results
+
+
+# 全局因子验证服务实例
+factor_validation_service = FactorValidationService()
